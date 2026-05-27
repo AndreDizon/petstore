@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.math.BigDecimal;
+import org.springframework.util.MultiValueMap;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/api/pets")
-@CrossOrigin(origins = {"http://localhost:5173", "http://127.0.0.1:5173", "https://petstore-frontend-qe2r.onrender.com"})
 public class PetController {
     private static final Logger log = LoggerFactory.getLogger(PetController.class);
     private final PetService petService;
@@ -64,6 +66,36 @@ public class PetController {
             return ResponseEntity.created(URI.create("/api/pets/" + created.getId())).body(created);
         } catch (Exception ex) {
             log.error("Error creating pet from body={}", body, ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(java.util.Map.of("message", "internal error"));
+        }
+    }
+
+    // Accept form-encoded posts (e.g. application/x-www-form-urlencoded) which
+    // some clients or quick curl tests may send. This keeps the API flexible
+    // for both JSON and form submissions.
+    @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<?> createPetForm(@org.springframework.web.bind.annotation.RequestBody MultiValueMap<String, String> form) {
+        log.info("Create pet form data: {}", form);
+        try {
+            String name = form.getFirst("name");
+            String species = form.getFirst("species");
+            String priceStr = form.getFirst("price");
+            BigDecimal price = null;
+            if (priceStr != null && !priceStr.isEmpty()) {
+                try { price = new BigDecimal(priceStr); } catch (NumberFormatException nfe) { /* handled below */ }
+            }
+            String imageUrl = form.getFirst("imageUrl");
+
+            if (name == null || species == null || price == null) {
+                return ResponseEntity.badRequest().body(java.util.Map.of("message", "name, species and price are required"));
+            }
+
+            Pet pet = new Pet(name, species, price);
+            pet.setImageUrl(imageUrl);
+            Pet created = petService.createPet(pet);
+            return ResponseEntity.created(URI.create("/api/pets/" + created.getId())).body(created);
+        } catch (Exception ex) {
+            log.error("Error creating pet from form={} ", form, ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(java.util.Map.of("message", "internal error"));
         }
     }
