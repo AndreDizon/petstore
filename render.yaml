@@ -14,17 +14,20 @@ services:
     # The database credentials below are populated from the `databases` entry.
     envVars:
       - key: JDBC_DATABASE_URL
-        fromDatabase: petstore-db
-        property: connectionString
+        fromDatabase:
+          name: petstore-db
+          property: connectionString
       - key: JDBC_DATABASE_USERNAME
-        fromDatabase: petstore-db
-        property: user
+        fromDatabase:
+          name: petstore-db
+          property: user
       - key: JDBC_DATABASE_PASSWORD
-        fromDatabase: petstore-db
-        property: password
+        fromDatabase:
+          name: petstore-db
+          property: password
 
-static_sites:
-  - name: petstore-frontend
+  - type: static
+    name: petstore-frontend
     repo: AndreDizon/petstore
     branch: main
     plan: free
@@ -36,7 +39,7 @@ static_sites:
 
 databases:
   - name: petstore-db
-    engine: postgres
+    type: postgres
     plan: free
     # recommended to pin major version; Render will provide connection info that the
     # backend service can consume via `fromDatabase` references above.
