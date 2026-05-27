@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pets")
-@CrossOrigin(origins = {"http://localhost:5173", "http://127.0.0.1:5173"})
+@CrossOrigin(origins = {"http://localhost:5173", "http://127.0.0.1:5173", "https://petstore-frontend-qe2r.onrender.com"})
 public class PetController {
     private static final Logger log = LoggerFactory.getLogger(PetController.class);
     private final PetService petService;

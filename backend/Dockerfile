@@ -39,4 +39,8 @@ RUN set -eux; \
 		chown spring:spring /app/app.jar || true
 USER spring
 
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+# Copy DB wait helper and make it executable
+COPY --chown=spring:spring wait-for-db.sh /app/wait-for-db.sh
+RUN chmod +x /app/wait-for-db.sh
+
+ENTRYPOINT ["/app/wait-for-db.sh"]
