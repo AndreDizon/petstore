@@ -8,7 +8,7 @@ services:
     branch: main
     runtime: docker
     dockerfilePath: backend/Dockerfile
-    plan: free
+    plan: starter
     # Render will expose this service on a public URL once created.
     # The database credentials below are populated from the `databases` entry.
     envVars:
