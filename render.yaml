@@ -1,0 +1,53 @@
+# Render Blueprint for Petstore
+# Defines: a managed Postgres database, a backend web service (Docker) and a frontend static site
+# Replace `AndreDizon/petstore` with your repo owner/name if different.
+
+services:
+  - type: web
+    name: petstore-backend
+    repo: AndreDizon/petstore
+    branch: main
+    env: docker
+    dockerfilePath: backend/Dockerfile
+    plan: free
+    # Render will expose this service on a public URL once created.
+    # The database credentials below are populated from the `databases` entry.
+    envVars:
+      - key: JDBC_DATABASE_URL
+        fromDatabase: petstore-db
+        property: connectionString
+      - key: JDBC_DATABASE_USERNAME
+        fromDatabase: petstore-db
+        property: user
+      - key: JDBC_DATABASE_PASSWORD
+        fromDatabase: petstore-db
+        property: password
+
+static_sites:
+  - name: petstore-frontend
+    repo: AndreDizon/petstore
+    branch: main
+    plan: free
+    buildCommand: cd frontend && npm ci && npm run build
+    publishPath: frontend/dist
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+databases:
+  - name: petstore-db
+    engine: postgres
+    plan: free
+    # recommended to pin major version; Render will provide connection info that the
+    # backend service can consume via `fromDatabase` references above.
+    version: "15"
+
+# Notes:
+# - The backend Spring Boot app expects `JDBC_DATABASE_URL`, `JDBC_DATABASE_USERNAME`,
+#   and `JDBC_DATABASE_PASSWORD` environment variables (these are wired from the
+#   `petstore-db` database above). If your app uses a different variable shape, adapt
+#   `src/main/resources/application.properties` or the envVar keys here.
+# - The static site publish path is `frontend/dist` (Vite's default build output). The
+#   buildCommand runs `npm ci` to produce consistent installs in Render build runners.
+# - After importing this blueprint in Render you may still need to wait a few minutes
+#   while Docker image builds and the static site build complete.
