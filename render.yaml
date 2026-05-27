@@ -7,7 +7,7 @@ services:
     name: petstore-backend
     repo: AndreDizon/petstore
     branch: main
-    env: docker
+    runtime: docker
     dockerfilePath: backend/Dockerfile
     plan: free
     # Render will expose this service on a public URL once created.
@@ -26,24 +26,24 @@ services:
           name: petstore-db
           property: password
 
-  - type: static_site
+  - type: web
+    runtime: static
     name: petstore-frontend
     repo: AndreDizon/petstore
     branch: main
     plan: free
     buildCommand: cd frontend && npm ci && npm run build
-    publishPath: frontend/dist
+    staticPublishPath: frontend/dist
     envVars:
       - key: NODE_ENV
         value: production
 
 databases:
   - name: petstore-db
-    type: postgres
     plan: free
     # recommended to pin major version; Render will provide connection info that the
     # backend service can consume via `fromDatabase` references above.
-    version: "15"
+    postgresMajorVersion: "15"
 
 # Notes:
 # - The backend Spring Boot app expects `JDBC_DATABASE_URL`, `JDBC_DATABASE_USERNAME`,
