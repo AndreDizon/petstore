@@ -68,7 +68,15 @@ export default function App() {
     try {
       const res = await axios.post('/api/pets', pet)
       setPets((p) => [...p, res.data])
-    } catch (e) { console.error(e) }
+      return
+    } catch (err: any) {
+      console.error(err)
+      const data = err?.response?.data
+      if (data && data.errors) {
+        return { errors: data.errors }
+      }
+      return
+    }
   }
 
   const handleAddToCart = (pet: Pet) => {
