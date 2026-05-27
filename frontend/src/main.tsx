@@ -35,7 +35,15 @@ try { document.documentElement.style.backgroundColor = '#fff4e1' } catch (e) { /
 // import.meta.env. If VITE_API_BASE_URL is not set, axios will use relative
 // URLs (useful for local dev with the Vite proxy).
 try {
-  const apiBase = (import.meta as any).env?.VITE_API_BASE_URL || ''
+  const raw = (import.meta as any).env?.VITE_API_BASE_URL || ''
+  let apiBase = String(raw || '').trim()
+
+  // Remove trailing slashes
+  apiBase = apiBase.replace(/\/+$/, '')
+  // If someone set the value to include a trailing /api, strip that so
+  // axios + our app's request paths don't end up like /api/api/pets.
+  apiBase = apiBase.replace(/\/api$/i, '')
+
   if (apiBase) {
     axios.defaults.baseURL = apiBase
   }
