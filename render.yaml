@@ -5,7 +5,6 @@
 services:
   - type: web
     name: petstore-backend
-    repo: AndreDizon/petstore
     branch: main
     runtime: docker
     dockerfilePath: backend/Dockerfile
@@ -29,7 +28,6 @@ services:
   - type: web
     runtime: static
     name: petstore-frontend
-    repo: AndreDizon/petstore
     branch: main
     plan: free
     buildCommand: cd frontend && npm ci && npm run build
