@@ -26,7 +26,7 @@ services:
           name: petstore-db
           property: password
 
-  - type: static
+  - type: static_site
     name: petstore-frontend
     repo: AndreDizon/petstore
     branch: main
