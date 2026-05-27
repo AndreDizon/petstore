@@ -36,6 +36,7 @@ public class PetController {
 
     @PostMapping
     public ResponseEntity<?> createPet(@RequestBody java.util.Map<String, Object> body) {
+        log.info("Create pet request body: {}", body);
         try {
             // extract fields defensively to avoid Jackson binding issues
             String name = body.get("name") != null ? String.valueOf(body.get("name")) : null;
