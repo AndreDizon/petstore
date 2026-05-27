@@ -1,0 +1,9 @@
+target/
+*.log
+!.mvn/wrapper/maven-wrapper.jar
+**/node_modules
+**/dist
+.idea
+.vscode
+**/*.iml
+*.class

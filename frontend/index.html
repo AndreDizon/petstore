@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Petstore</title>
+    <style>
+      /* Site background: stronger warm cream for visibility */
+      html, body, #root {
+        background-color: #fff4e1 !important;
+        height: 100% !important;
+      }
+      body { margin: 0 !important; }
+    </style>
+  </head>
+  <body style="background-color: #fff4e1 !important;">
+  <!-- Guaranteed background layer (fallback) -->
+  <div id="root" class="min-h-screen" style="background-color: #fff4e1 !important; position:relative; z-index:1;">
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
