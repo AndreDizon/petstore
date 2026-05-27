@@ -1,0 +1,18 @@
+# Repo-level ignores
+# Ignore frontend dependencies directory (already committed by mistake)
+frontend/node_modules/
+
+# Node / npm
+node_modules/
+package-lock.json
+
+# Java / Maven
+backend/target/
+*.class
+
+# IDEs
+.idea/
+.vscode/
+
+# Logs
+*.log
